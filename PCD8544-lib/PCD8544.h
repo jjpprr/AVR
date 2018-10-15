@@ -147,17 +147,8 @@ void LCD_printInt(uint16_t n, uint8_t col, uint8_t row, char justification);
 
 void LCD_printFP(int16_t n, uint16_t SF_exp, uint8_t d_places, uint8_t col, uint8_t row, char justification);
 
-		/* 4x8 font */
-void LCD_printTinyFont(char string[], uint8_t width, uint8_t length, uint8_t col, uint8_t row);
-
 		/* 6x8 font */
 void LCD_printSmallFont(char string[], uint8_t width, uint8_t length, uint8_t col, uint8_t row, char justification);
-
-		/* 6x8 font with more symbols */
-void LCD_printAdaFont(char string[], uint8_t width, uint8_t length, uint8_t col, uint8_t row);
-
-		/* 6x8 font with more symbols */
-void LCD_printSinclairFont(char string[], uint8_t width, uint8_t length, uint8_t col, uint8_t row);
 
 /* Drawing functions */
 void LCD_drawPixel(uint8_t x, uint8_t y);
