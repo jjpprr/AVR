@@ -187,7 +187,13 @@ void LCD_drawOver(unsigned char bitmap[], uint16_t bitmap_length, uint8_t x_b, u
 	}
 }
 
-// Writing
+
+/* Writing functions
+*	-Integer
+*	-Fixed point number
+*	-Text (8px high fonts)
+*/
+
 void LCD_printInt(uint16_t n, uint8_t col, uint8_t row, char justification) {
 	char n_str[5];
 	utoa(n, n_str, 10);
@@ -237,10 +243,6 @@ void LCD_printFP(int16_t n, uint16_t SF_exp, uint8_t d_places, uint8_t col, uint
 	
 	// Print
 	LCD_printSmallFont(str, 6 * strlen(str), strlen(str), col, row, justification);
-}
-
-void LCD_setFont(const char *pgm_start_location, uint8_t px_width, uint8_t px_height) {
-	LCD_font = (struct Font){pgm_start_location, px_width, (px_height >> 3) + 1};
 }
 
 #ifdef TinyFont_FLAG
@@ -323,20 +325,22 @@ void LCD_printSinclairFont(char string[], uint8_t width, uint8_t length, uint8_t
 * Functions with structs as arguments
 */
 
+void LCD_setFont(char *pgm_start_location, uint8_t px_width, uint8_t px_height) {
+	LCD_font = (struct Font){pgm_start_location, px_width, (px_height >> 3) + 1};
+}
 
 void LCD_printSmallFont_s(struct Text *text) {
 	uint8_t char_width = LCD_font.px_width;
 	
 	uint8_t length = (text->char_length) ? text->char_length : strlen(text->string);
-	uint8_t px_width = (text->px_width) ? text->px_width : length * LCD_font.px_width;
+	uint8_t px_width = (text->px_width) ? text->px_width : length * char_width;
 	
-	unsigned char stringBitmap[length * LCD_font.px_width];
+	unsigned char stringBitmap[length * char_width];
 	
 	for (uint8_t i = 0; i < length; i++) {
-		for (uint8_t j = 0; j < LCD_font.px_width; j++) {
-			//stringBitmap[i * 6 + j] = pgm_read_byte(&SmallFont[6 * (*(text->string + i) - 32) + j]);
-			stringBitmap[i * LCD_font.px_width + j] = 
-						pgm_read_byte(LCD_font.pgm_start_location + (LCD_font.px_width * (*(text->string + i) - 32) + j));
+		for (uint8_t j = 0; j < char_width; j++) {
+			stringBitmap[i * char_width + j] = 
+						pgm_read_byte(LCD_font.pgm_start_location + (char_width * (*(text->string + i) - 32) + j));
 		}
 	}
 	
@@ -355,7 +359,7 @@ void LCD_printSmallFont_s(struct Text *text) {
 	};
 	
 	LCD_draw(stringBitmap, arrayLength(stringBitmap), px_width, 
-				((length * LCD_font.px_width) / px_width) * 8 + 1, col, *(text->pos + 1));
+				((length * char_width) / px_width) * 8 + 1, col, *(text->pos + 1));
 }
 
 
@@ -366,7 +370,14 @@ void LCD_printSmallFont_s(struct Text *text) {
 
 
 
-// Drawing
+/* Drawing functions
+*	-Pixel
+*	-Line
+*	-Rectangle (With rounded corners)
+*	-Banner (Rectangle with inside rounded corners)
+*	-Cricle
+*/
+
 void LCD_drawPixel(uint8_t x, uint8_t y) {
 	LCD_Screen_Buffer[x + (y / 8) * 84] |= (1 << (y & 0x07));
 }
