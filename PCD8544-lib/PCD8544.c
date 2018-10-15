@@ -189,7 +189,7 @@ void LCD_drawOver(unsigned char bitmap[], uint16_t bitmap_length, uint8_t x_b, u
 
 /* Writing functions
 *	-Integer
-*	-Fized point number
+*	-Fixed point number
 *	-Text (8px high fonts)
 */
 
@@ -255,7 +255,7 @@ void LCD_printSmallFont(char string[], uint8_t width, uint8_t length, uint8_t co
 	for (uint8_t i = 0; i < length; i++) {
 		for (uint8_t j = 0; j < LCD_font.px_width; j++) {
 			stringBitmap[i * LCD_font.px_width + j] =
-								pgm_read_byte(*(LCD_font.pgm_start_location + (LCD_font.px_width * (string[i] - 32) + j));
+					pgm_read_byte(LCD_font.pgm_start_location + (LCD_font.px_width * (string[i] - 32) + j));
 		}
 	}
 	
